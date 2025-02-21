@@ -4,7 +4,8 @@ const pdps = {
   "Aserto": "https://authzen-gateway-proxy.demo.aserto.com",
   "Axiomatics": "https://pdp.alfa.guide",
   "Cerbos": "https://authzen-proxy-demo.cerbos.dev",
-  "PlainID": "https://authzeninteropt.se-plainid.com"
+  "PlainID": "https://authzeninteropt.se-plainid.com",
+  "Rock Solid Knowledge": "https://authzen.identityserver.com"
 }
 
 export default async function policy(
