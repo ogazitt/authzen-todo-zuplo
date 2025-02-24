@@ -22,7 +22,7 @@ export default async function policy(
 
   const authzenRequest = JSON.stringify({
     "subject": {
-      "type": "user",
+      "type": "identity",
       "id": request.user.sub
     },
     "resource": {
