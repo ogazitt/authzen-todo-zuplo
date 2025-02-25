@@ -8,6 +8,8 @@ const pdps = {
   "Rock Solid Knowledge": "https://authzen.identityserver.com",
   "Topaz": "https://authzen-topaz.demo.aserto.com"
 }
+const { AUTHZEN_PDP_API_KEYS } = environment
+const apiKeys = (AUTHZEN_PDP_API_KEYS && JSON.parse(AUTHZEN_PDP_API_KEYS)) ?? {}
 
 export default async function policy(
   request: ZuploRequest,
@@ -17,8 +19,8 @@ export default async function policy(
   if (!request.user) {
     context.log.error(
       "User is not authenticated. An authentication policy must come before the authorization policy.",
-    );
-    return HttpProblems.unauthorized(request, context);
+    )
+    return HttpProblems.unauthorized(request, context)
   }
 
   const authzenRequest = JSON.stringify({
@@ -37,8 +39,8 @@ export default async function policy(
 
   const gatewayPdp = request.headers.get("X_AUTHZEN_GATEWAY_PDP")
   if (!gatewayPdp) {
-    context.log.error("GATEWAY PDP URL is missing in the request headers.");
-    return HttpProblems.forbidden(request, context);
+    context.log.error("GATEWAY PDP URL is missing in the request headers.")
+    return HttpProblems.forbidden(request, context)
   }
   const pdpUrl = pdps[gatewayPdp]
   if (!pdpUrl) {
@@ -50,7 +52,7 @@ export default async function policy(
     context.log.info(`Sending request to ${gatewayPdp} at ${gatewayPdpUrl}`)
     context.log.debug(`AuthZEN request: ${authzenRequest}`)
 
-    const apiKey = environment.AUTHZEN_PDP_API_KEYS && environment.AUTHZEN_PDP_API_KEYS[gatewayPdp]
+    const apiKey = apiKeys[gatewayPdp]
     const headers = {
       "content-type": "application/json",
     }
@@ -77,6 +79,6 @@ export default async function policy(
     context.log.error(
       `AuthZEN authorization error. The user '${request.user.sub}' is not authorized to perform this action.`,
     )
-    return HttpProblems.forbidden(request, context);
+    return HttpProblems.forbidden(request, context)
   }
 }
